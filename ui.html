@@ -6,7 +6,7 @@
         body {
             font-family: Arial, sans-serif;
         }
-        #track-btn {
+        .btn {
             padding: 10px;
             background-color: #6200ee;
             color: white;
@@ -29,7 +29,8 @@
     </style>
 </head>
 <body>
-<button id="track-btn">Track Elements</button>
+<button id="track-btn" class="btn">Track Elements</button>
+<button id="resizeButton" class="btn">Resize</button>
 <table>
     <thead>
     <tr>
@@ -69,6 +70,11 @@
             });
         }
     };
+
+    document.getElementById('resizeButton').onclick = () => {
+        parent.postMessage({ pluginMessage: { type: 'resize', width: 800, height: 400 } }, '*');
+    };
+
 </script>
 </body>
 </html>

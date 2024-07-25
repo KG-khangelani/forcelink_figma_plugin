@@ -1,4 +1,8 @@
-figma.showUI(__html__);
+figma.showUI(__html__, { width: 800, height: 400 });
+
+function resizeUI(width: number, height: number) {
+  figma.ui.resize(width, height);
+}
 
 figma.ui.onmessage = async (msg) => {
   if (msg.type === 'track-elements') {
@@ -19,6 +23,10 @@ figma.ui.onmessage = async (msg) => {
           traverse(child, depth + 1);
         }
       }
+    }
+
+    if (msg.type === 'resize') {
+      resizeUI(msg.width, msg.height);
     }
 
     nodes.forEach(node => traverse(node as SceneNode));
