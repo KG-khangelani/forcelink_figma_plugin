@@ -1,17 +1,74 @@
-<h2>Rectangle Creator</h2>
-<p>Count: <input id="count" value="5"></p>
-<button id="create">Create</button>
-<button id="cancel">Cancel</button>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>Element Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #track-btn {
+            padding: 10px;
+            background-color: #6200ee;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<button id="track-btn">Track Elements</button>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Nesting Level</th>
+        <th>Children Count</th>
+    </tr>
+    </thead>
+    <tbody id="elements-table">
+    </tbody>
+</table>
+
 <script>
+    const trackBtn = document.getElementById('track-btn');
+    const elementsTable = document.getElementById('elements-table');
 
-document.getElementById('create').onclick = () => {
-  const textbox = document.getElementById('count');
-  const count = parseInt(textbox.value, 10);
-  parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
-}
+    trackBtn.addEventListener('click', () => {
+        parent.postMessage({ pluginMessage: { type: 'track-elements' } }, '*');
+    });
 
-document.getElementById('cancel').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-}
-
+    onmessage = (event) => {
+        const message = event.data.pluginMessage;
+        if (message.type === 'tracked-elements') {
+            elementsTable.innerHTML = '';
+            message.elements.forEach(element => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${element.id}</td>
+            <td>${element.name}</td>
+            <td>${element.type}</td>
+            <td>${element.depth}</td>
+            <td>${element.childrenCount}</td>
+          `;
+                elementsTable.appendChild(row);
+            });
+        }
+    };
 </script>
+</body>
+</html>
